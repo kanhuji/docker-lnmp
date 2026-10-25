@@ -1,7 +1,7 @@
 .idea
-/logs
-/data
 .env
-
 .DS_Store
 id_rsa*
+/logs
+/data
+/nginx/conf.d
