@@ -1,0 +1,62 @@
+server {
+    listen          80;
+    server_name     localhost;
+
+    # WEB_ROOT_PATH (../www) is mounted at /var/www
+    root   /var/www;
+    index  index.php index.html index.htm;
+    charset utf-8;
+
+    access_log /dev/stdout;
+    error_log  /dev/stderr warn;
+
+    client_max_body_size 100M;
+
+    # Discuz! pseudo-static rewrite rules
+    rewrite ^([^\.]*)/topic-(.+)\.html$ $1/portal.php?mod=topic&topic=$2 last;
+    rewrite ^([^\.]*)/article-([0-9]+)-([0-9]+)\.html$ $1/portal.php?mod=view&aid=$2&page=$3 last;
+    rewrite ^([^\.]*)/forum-(\w+)-([0-9]+)\.html$ $1/forum.php?mod=forumdisplay&fid=$2&page=$3 last;
+    rewrite ^([^\.]*)/thread-([0-9]+)-([0-9]+)-([0-9]+)\.html$ $1/forum.php?mod=viewthread&tid=$2&extra=page%3D$4&page=$3 last;
+    rewrite ^([^\.]*)/group-([0-9]+)-([0-9]+)\.html$ $1/forum.php?mod=group&fid=$2&page=$3 last;
+    rewrite ^([^\.]*)/space-(username|uid)-(.+)\.html$ $1/home.php?mod=space&$2=$3 last;
+    rewrite ^([^\.]*)/blog-([0-9]+)-([0-9]+)\.html$ $1/home.php?mod=space&uid=$2&do=blog&id=$3 last;
+    rewrite ^([^\.]*)/(fid|tid)-([0-9]+)\.html$ $1/index.php?action=$2&value=$3 last;
+    rewrite ^([^\.]*)/([a-z]+[a-z0-9_]*)-([a-z0-9_\-]+)\.html$ $1/plugin.php?id=$2:$3 last;
+
+    if (!-e $request_filename) {
+        return 404;
+    }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    # Block PHP execution in upload/cache dirs
+    location ~* ^/(data|uc_server/data)/.*\.(php|php5)$ {
+        deny all;
+    }
+
+    # Block sensitive dirs/files
+    location ~* ^/(config|source|template|uc_client|api/trade)/.*\.(php|inc|tpl)$ {
+        deny all;
+    }
+    location ~ /\.(?!well-known) {
+        deny all;
+    }
+
+    location ~* \.(gif|jpg|jpeg|png|bmp|ico|css|js|swf|svg|woff2?)$ {
+        expires 30d;
+        access_log off;
+    }
+
+    location ~ \.php$ {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass php83:9083;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+}
