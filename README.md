@@ -5,58 +5,41 @@
 5. Redis 支持 4.0 、5.0 、6.0 版本；
 6. PHP 扩展包括了gd、grpc、redis、protobuf、memcached、swoole、kafka、imap等；
 
-### 一. [install docker](https://github.com/ogenes/docker-lnmp/wiki/Docker-%E7%AE%80%E4%BB%8B%E5%8F%8A%E5%AE%89%E8%A3%85)
+### 一. [install docker](https://docs.docker.com/engine/install/)
 
-```
-$ docker -v
-Docker version 20.10.21, build baeda1f
-
-$ docker-compose -v
-Docker Compose version v2.12.2
+```shell
+docker -v
+docker-compose -v
 
 ```
 ### 二. download
-```$xslt
-$ pwd
-/d/app
-$ git clone https://github.com/ogenes/docker-lnmp.git
+```shell
+git clone https://github.com/kanhuji/docker-lnmp.git
 ```
 ### 三. init
-```shell script
-$ cd docker-lnmp
-$ cp .env.example .env
+```shell
+cd docker-lnmp
+cp .env.example .env
 ```
 
 ### 四. run
-```shell script
-#创建网络，指定子网与.env中配置一致
-$ docker network create backend --subnet=172.19.0.0/16
-18f511530214374896700ad3f179fb9180227fe4e5b6ccf7e9f8ed9b8602059c
-$ docker network ls | grep backend
-18f511530214   backend   bridge    local
+```shell
+docker network ls | grep backend
 
-#首次执行耗时较久，耐心等待
-$ docker-compose up -d nginx php74 mysql redis
-$ docker ps
-CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                      NAMES
-ba864491ac22        docker-lnmp_mysql   "docker-entrypoint.s…"   22 minutes ago      Up 6 seconds        0.0.0.0:3306->3306/tcp, 33060/tcp          mysql
-68ca3dcdf667        docker-lnmp_nginx   "nginx -g 'daemon of…"   42 minutes ago      Up 3 seconds        0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp   nginx
-9e46003ebe39        docker-lnmp_php74   "docker-php74-entrypoi…"   42 minutes ago      Up 4 seconds        0.0.0.0:9074->9074/tcp                     php
-e1c96bbea465        docker-lnmp_redis   "docker-entrypoint.s…"   51 minutes ago      Up 5 seconds        0.0.0.0:6379->6379/tcp                     redis
+docker-compose up -d nginx php74 mysql redis
+docker ps
 ```
 
 ### 五. test
-```
-$ cp nginx/conf.d/default.conf.example nginx/conf.d/default.conf
-$ docker-compose restart nginx
+```shell
+cp nginx/conf.d/default.conf.example nginx/conf.d/default.conf
+docker-compose restart nginx
 
 #绑定本机hosts
 127.0.0.1 default.dev.com
 
 ```
-访问 http://default.dev.com/ 得到响应 Hello Ogenes! 表示运行成功。
-
-![QQ截图20210114105752.png](https://i.loli.net/2021/01/14/NPTJhEgcszFZaOp.png)
+访问 http://default.dev.com/ 得到响应 Hello Kanhuji! 表示运行成功。
 
 ### 六. note
     默认版本为：
@@ -72,110 +55,21 @@ $ docker-compose restart nginx
 
 ### 七. restart | down | rebuild
 
-```shell script
-
+```shell
 #修改配置文件后重启即可
-$ docker-compose restart nginx php
-Restarting nginx ... done
-Restarting php   ... done
+docker-compose restart nginx php
 
-# 修改 dockerfile 或者 env 文件之后 rebuild 可生效
-$ docker-compose up -d --build php nginx mysql
+# 修改 dockerfile 或者 .env 文件之后 rebuild 可生效
+docker-compose up -d --build php nginx mysql
 
 # 停止
-$ docker-compose stop
+docker-compose stop
 
 # 停止并删除容器
-$ docker-compose down
+docker-compose down
 
 # 停止并删除容器+镜像
-$ docker-compose down --rmi all
-
-```
-
-### 目录结构
-
-```
-├── LICENSE
-├── README.md
-├── compose.yml
-├── mysql
-         ├── Dockerfile
-         └── docker.cnf
-├── nginx
-         ├── Dockerfile
-         ├── conf.d
-                  ├── default.conf
-                  ├── fpm
-                           ├── php56-fpm
-                           ├── php71-fpm
-                           ├── php72-fpm
-                           ├── php73-fpm
-                           ├── php74-fpm
-                           ├── php80-fpm
-                           └── php81-fpm
-         ├── nginx.conf
-├── php56
-         ├── Dockerfile
-         └── config
-             ├── php-fpm.conf
-             ├── php-fpm.d
-                      ├── www.conf
-                      └── zz-docker.conf
-             └── php.ini
-├── php71
-         ├── Dockerfile
-         └── config
-             ├── php-fpm.conf
-             ├── php-fpm.d
-                      ├── www.conf
-                      └── zz-docker.conf
-             └── php.ini
-├── php72
-         ├── Dockerfile
-         └── config
-             ├── php-fpm.conf
-             ├── php-fpm.d
-                      ├── www.conf
-                      └── zz-docker.conf
-             └── php.ini
-├── php73
-         ├── Dockerfile
-         └── config
-             ├── php-fpm.conf
-             ├── php-fpm.d
-                      ├── www.conf
-                      └── zz-docker.conf
-             └── php.ini
-├── php74
-         ├── Dockerfile
-         └── config
-             ├── php-fpm.conf
-             ├── php-fpm.d
-                      ├── www.conf
-                      └── zz-docker.conf
-             └── php.ini
-├── php80
-         ├── Dockerfile
-         └── config
-             ├── php-fpm.conf
-             ├── php-fpm.d
-                      ├── www.conf
-                      └── zz-docker.conf
-             └── php.ini
-├── php81
-         ├── Dockerfile
-         └── config
-             ├── php-fpm.conf
-             ├── php-fpm.d
-                      ├── www.conf
-                      └── zz-docker.conf
-             └── php.ini
-└── redis
-├── Dockerfile
-├── redis4.conf
-├── redis5.conf
-└── redis6.conf
+docker-compose down --rmi all
 
 ```
 
