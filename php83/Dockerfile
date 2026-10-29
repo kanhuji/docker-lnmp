@@ -1,4 +1,4 @@
-FROM php:8.3.16-fpm
+FROM php:8.3.36-fpm
 
 LABEL maintainer="ogenes.yi@gmail.com"
 
@@ -54,6 +54,7 @@ RUN docker-php-ext-configure bcmath --enable-bcmath \
         pcntl \
         pdo_mysql \
         sockets \
+        ftp \
         zip \
         soap \
         exif \

@@ -26,7 +26,7 @@ cp .env.example .env
 ```shell
 docker network ls | grep backend
 
-docker-compose up -d nginx php74 mysql redis
+docker compose up -d nginx php83 mysql redis ftp
 docker ps
 ```
 
@@ -60,7 +60,7 @@ docker-compose restart nginx
 docker-compose restart nginx php
 
 # 修改 dockerfile 或者 .env 文件之后 rebuild 可生效
-docker-compose up -d --build php nginx mysql
+docker compose up -d --build nginx php83 mysql redis ftp
 
 # 停止
 docker-compose stop

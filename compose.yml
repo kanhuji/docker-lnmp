@@ -34,6 +34,25 @@ services:
       backend:
         ipv4_address: ${CERTBOT_IP}
 
+  ftp:
+    image: delfer/alpine-ftp-server:latest
+    container_name: ftp
+    env_file:
+      - ${FTP_USERS_FILE:-./ftp/users.env}
+    environment:
+      ADDRESS: ${FTP_ADDRESS:-127.0.0.1}
+      MIN_PORT: ${FTP_PASSIVE_PORT_MIN:-21000}
+      MAX_PORT: ${FTP_PASSIVE_PORT_MAX:-21010}
+    ports:
+      - ${FTP_HOST_PORT:-21}:21
+      - ${FTP_PASSIVE_PORT_MIN:-21000}-${FTP_PASSIVE_PORT_MAX:-21010}:${FTP_PASSIVE_PORT_MIN:-21000}-${FTP_PASSIVE_PORT_MAX:-21010}
+    restart: always
+    volumes:
+      - ${FTP_DATA_PATH:-./data/ftp}:/home
+    networks:
+      backend:
+        ipv4_address: ${FTP_IP}
+
   mysql:
     build:
       context: ./mysql
@@ -366,8 +385,8 @@ services:
     build:
       context: ./php83
       args:
-        - EXT_GD=false
-        - EXT_REDIS=false
+        - EXT_GD=true
+        - EXT_REDIS=true
         - EXT_GRPC=false
         - EXT_PROTOBUF=false
         - EXT_MEMCACHED=false

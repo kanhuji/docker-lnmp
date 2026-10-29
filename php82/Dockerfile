@@ -54,6 +54,7 @@ RUN docker-php-ext-configure bcmath --enable-bcmath \
         pcntl \
         pdo_mysql \
         sockets \
+        ftp \
         zip \
         soap \
         exif \
