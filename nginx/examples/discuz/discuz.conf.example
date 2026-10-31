@@ -10,7 +10,7 @@ server {
     access_log /dev/stdout;
     error_log  /dev/stderr warn;
 
-    client_max_body_size 100M;
+    client_max_body_size 0;
 
     # Discuz! pseudo-static rewrite rules
     rewrite ^([^\.]*)/topic-(.+)\.html$ $1/portal.php?mod=topic&topic=$2 last;
