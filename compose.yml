@@ -48,7 +48,7 @@ services:
       - ${FTP_PASSIVE_PORT_MIN:-21000}-${FTP_PASSIVE_PORT_MAX:-21010}:${FTP_PASSIVE_PORT_MIN:-21000}-${FTP_PASSIVE_PORT_MAX:-21010}
     restart: always
     volumes:
-      - ${FTP_DATA_PATH:-./data/ftp}:/home
+      - ${FTP_DATA_PATH:-./data/ftp}:/wwwroot
     networks:
       backend:
         ipv4_address: ${FTP_IP}
