@@ -26,7 +26,7 @@ cp .env.example .env
 ```shell
 docker network ls | grep backend
 
-docker compose up -d nginx php83 mysql redis ftp
+docker compose up -d nginx php83 mysql phpmyadmin redis ftp
 docker ps
 ```
 
