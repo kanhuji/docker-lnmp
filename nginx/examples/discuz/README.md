@@ -24,3 +24,13 @@ Check existing users and hosts
 ```shell
 docker exec -it mysql mysql -uroot -p -e "SELECT user,host FROM mysql.user;"
 ```
+
+Grant read and write access to other users for development because users and groups other than `www-data` cannot write in both host and docker container. 
+```shell
+sudo chmod -R o+rw .
+```
+
+If you want to run a different version of PHP, do not forget to update `discuz.conf` accordingly
+```shell
+fastcgi_pass php82:9082;
+```

@@ -1,4 +1,4 @@
-FROM php:8.2.14-fpm
+FROM php:8.2-fpm
 
 LABEL maintainer="ogenes.yi@gmail.com"
 
